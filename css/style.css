@@ -1,0 +1,168 @@
+* {
+margin:0;
+padding:0
+}
+
+header,footer,article,section,hgroup,nav,figure {
+display:block
+}
+
+body {
+background-color:#355664;
+color:#fcfcfc;
+font-family:"Myriad Pro","Helvetica Neue",Helvetica,Arial,Sans-Serif
+font-size:.825em
+}
+
+a,a:visited {
+color:#0196e3;
+outline:none;
+text-decoration:none
+}
+
+a:hover {
+text-decoration:underline
+}
+
+a img {
+border:none
+}
+
+h1 {
+font-size:3em;
+padding:.5em 0 0;
+text-transform:uppercase
+}
+
+h3 {
+font-size:2em;
+font-weight:400;
+margin:0 0 1em
+}
+
+h2 {
+font-size:2.2em;
+font-weight:400;
+letter-spacing:.01em;
+text-transform:uppercase
+}
+
+p {
+line-height:1.5em;
+padding-bottom:1em
+}
+
+ul,li {
+padding:5px 2px 2px 12px
+}
+
+.number { font-weight: bold;}
+
+.error { color: #ff0;}
+
+.line {
+background-color:#24404c;
+border-bottom:1px solid #416371;
+height:1px;
+margin:1em 0;
+overflow:hidden
+}
+
+article .line {
+background-color:#15242a;
+border-bottom-color:#204656;
+margin:1.3em 0
+}
+
+footer .line {
+margin:2em 0
+}
+
+#page {
+margin:0 auto;
+position:relative;
+width:960px
+}
+
+article {
+background-color:#213E4A;
+margin:3em 0;
+padding:20px
+}
+
+#response {
+float:right;
+height:360px;
+line-height:24px;
+margin-left:15px;
+overflow:hidden;
+width:360px
+}
+
+
+input {
+background-color:#213e4a;
+color:#ccc;
+padding:2px 4px;
+position:relative;
+z-index:100
+}
+input.btn {
+float:right
+}
+
+input.rounded, textarea.rounded {
+background-color:#213e4a;
+border:1px solid #ccc;
+font-size:.825em;
+outline:0;
+padding:4px 7px
+}
+
+input.rounded:focus {
+border-color:#4D7788
+}
+
+footer {
+font-size:.825em;
+margin-bottom:30px;
+text-align:center
+}
+
+select{
+    background-color: #213e4a;
+    color:  #ccc;
+    max-width: 183px;
+    padding: 2px 4px;
+		border:1px solid #ccc;
+		font-size:.825em;
+		outline:0;
+		padding:4px 7px
+	}
+
+	select:focus {
+	border-color:#4D7788
+	}
+
+footer p {
+margin-bottom:-2.5em;
+position:relative
+}
+
+footer a,footer a:visited {
+background-color:#213e4a;
+color:#ccc;
+display:block;
+padding:2px 4px;
+position:relative;
+z-index:100
+}
+
+footer a:hover {
+background-color:#142830;
+text-decoration:none
+}
+
+footer a.up {
+float:right
+}

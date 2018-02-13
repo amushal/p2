@@ -14,6 +14,10 @@ body {
     font-size: .825em
 }
 
+table {
+    border: 0;
+    padding: 5px;
+}
 a, a:visited {
     color: #0196e3;
     outline: none;

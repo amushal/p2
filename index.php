@@ -23,25 +23,30 @@
 <div class="container">
     <div class="py-5 text-center">
         <h2>Cost Calculator</h2>
-        <p class="lead">Please provide the requested information. Your responses will be used to calculate the total cost and monthly payments.</p>
+        <p class="lead">Calculate the total cost and monthly payments.</p>
     </div>
 
     <div class="row">
         <div class="col-md-4 order-md-2 mb-4">
             <?php if (isset($errors)) : ?>
+
                 <?php if (count($errors) > 0) : ?>
-                    <h4 class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="text-muted">Invalid Input</span>
+
+                    <h4 class="alert alert-danger d-flex justify-content-between align-items-center mb-3">
+                        <strong>Invalid input</strong>
                         <span class="badge badge-secondary badge-pill"><?= count($errors) ?></span>
                     </h4>
+
                     <ul class='list-group alert-danger'>
                         <?php foreach ($errors as $error) : ?>
                             <li class="list-group-item"><?= $error ?></li>
                         <?php endforeach; ?>
                     </ul>
+
                 <?php else : ?>
-                    <h4 class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="text-muted">Result</span>
+
+                    <h4 class="alert alert-success d-flex justify-content-between align-items-center mb-3">
+                        <strong>Result</strong>
                     </h4>
                     <ul class="list-group mb-3">
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
@@ -121,9 +126,9 @@
 
 
         <div class="col-md-8 order-md-1">
-            <!--<h4 class="d-flex justify-content-between align-items-center mb-3">
-                <span class="text-muted">Please provide the following information and then click Submit:</span>
-            </h4>-->
+            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-muted">Please provide the requested information:</span>
+            </h4>
             <br/>
             <form method="post">
                 <div class="row">
@@ -134,7 +139,7 @@
 
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="email">email <span class="text-muted">(Optional)</span></label>
+                        <label for="email">Email <span class="text-muted">(Optional)</span></label>
                         <input type="email" class="form-control" id="email" name="email"
                                aria-describedby="emailHelp"
                                placeholder="you@example.com" value='<?= $form->prefill('email', '') ?>'>
@@ -156,7 +161,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-5 mb-3">
+                    <div class="col-md-4 mb-3">
 
                         <label for="price">Price </label>
 
@@ -178,7 +183,7 @@
                         <input type="number" class="form-control" placeholder="Quantity" id="quantity" name="quantity"
                                value='<?= $form->prefill('quantity', '') ?>'>
                     </div>
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="payments">Payments</label>
                         <input type="number" class="form-control" placeholder="Payments" id="payments"
                                name="payments"
@@ -193,11 +198,12 @@
                                value='<?= $form->prefill('discount', '') ?>'>
                     </div>
                     <div class="col-md-6 mb-3 custom-control custom-checkbox">
-                        <label for="percent">Percentage <span class="text-muted">(%)</span></label>
+                        <label for="percent">Discount Type </label>
                         <div>
                             <input type="checkbox"
                                    id="percent"
-                                   name='percent' <?php if ($form->isChosen('percent')) echo 'checked' ?>></div>
+                                   name="percent" <?php if ($form->isChosen('percent')) echo 'checked' ?>>&nbsp;<label
+                                    for="percent"> %</label></div>
                     </div>
                 </div>
                 <div class="row">

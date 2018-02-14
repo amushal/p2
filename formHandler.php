@@ -10,9 +10,10 @@ $percent = $_POST['percent'] ?? '';
 if ($form->isSubmitted()) {
     $errors = $form->validate(
         [
-            'email' => 'required|email',
-            'website' => 'required|url',
+
             'name' => 'alpha',
+            'email' => 'email',
+            'website' => 'url',
             'price' => 'required|numeric',
             'qty' => 'required|min:0',
             'payments' => 'required|min:0',
@@ -30,34 +31,37 @@ if ($form->isSubmitted()) {
     $disc = (int)$_POST["disc"];
     $tax = (int)$_POST["tax"];
     $payments = (int)$_POST["payments"];
-    $taxrate = ($tax / 100) + 1;
-    $total = 0;
-    $taxtype = "";
+    $taxRate = ($tax / 100) + 1;
+    $shipping = $_POST["shipping"];
+
+    $total = $price * $qty;
+    $discType = "";
 
     if ($percent) {
-        $taxtype = "%";
-        $total = $price * $qty;
+        $discType = "%";
+        $total = $total * (1 - $disc / 100);
     } else {
-        $taxtype = " dollars off";
+        $discType = " dollars off";
         $total = $total - $disc;
     }
 
     $total = $total + (int)$shipping;
+
     $shipType = "";
     if ($shipping == "0")
-        $shipType = "Ground: 5 to 7 days Free";
-    else if ($shipping == "10")
-        $shipType = "Standard: 1 Week $10";
-    else if ($shipping == "20")
-        $shipType = "Expedite: 2nd day $20";
-    else
+        $shipType = "Free / Pickup";
+    else if ($shipping == "9.95")
+        $shipType = "Standard: 1 Week $9.95";
+    else if ($shipping == "29.95")
+        $shipType = "Expedite: 2nd day $29.95";
+    else {
         $shipType = "Not selected";
-
+        $shipping = "";
+    }
 // Factor in the tax rate:
-    $total = $total * $taxrate;
+    $total = $total * $taxRate;
 
-    if ($payments == 0)
-        $payments = 1;
+    $payments = ($payments == 0) ? 1 : $payments;
 
 // Calculate the monthly payments:
     $monthly = $total / $payments;

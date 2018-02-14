@@ -4,7 +4,7 @@
 
 ## Outside resources
 + Styling via [Bootstrap CDN](https://www.bootstrapcdn.com)
-+ FormHandler [Github dwa15-php](http://php.dwa15.com)
++ Form Handling and input validation via [Github dwa15-php](https://github.com/susanBuck/dwa15-php)
 
 ## Code style divergences
 n/a

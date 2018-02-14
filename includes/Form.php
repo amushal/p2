@@ -197,7 +197,11 @@ class Form
      */
     protected function email($value)
     {
-        return filter_var($value, FILTER_VALIDATE_EMAIL);
+        $valid = true;
+        if ($value != '')
+            $valid = filter_var($value, FILTER_VALIDATE_EMAIL);
+
+        return $valid;
     }
 
     /**
@@ -205,12 +209,19 @@ class Form
      */
     protected function url($value)
     {
-        if (preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $value)) {
-            return true;
-        } else {
-            return false;
-        }
-        //return filter_var($value, FILTER_VALIDATE_URL);
+        # Version 1
+//        if (preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $value)) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+
+        # Version 2
+        $valid = true;
+        if ($value != '')
+            $valid = filter_var($value, FILTER_VALIDATE_URL);
+
+        return $valid;
     }
 
     /**
@@ -228,4 +239,15 @@ class Form
     {
         return floatval($value) < floatval($parameter);
     }
+
+    /**
+     * Returns boolean if given value contains only positive whole numbers
+     * @param $value
+     * @return bool
+     */
+    protected function float($value)
+    {
+        return filter_var($value, FILTER_VALIDATE_FLOAT);
+    }
+
 } # end of class

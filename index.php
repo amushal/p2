@@ -66,21 +66,21 @@
                             <div>
                                 <h6 class="my-0">Price</h6>
                             </div>
-                            <span class="text-muted"><?= $price ?></span>
+                            <span class="text-muted"><?= format($price) ?></span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
                             <div>
                                 <h6 class="my-0">Quantity</h6>
                             </div>
-                            <span class="text-muted"><?= $qty ?></span>
+                            <span class="text-muted"><?= $quantity ?></span>
                         </li>
 
-                        <?php if ($disc != 0) : ?>
+                        <?php if ($discount != 0) : ?>
                             <li class="list-group-item d-flex justify-content-between bg-light">
                                 <div class="text-success">
                                     <h6 class="my-0">Discount</h6>
                                 </div>
-                                <span class="text-success"><?= $disc ?>
+                                <span class="text-success"><?= round($discount, 2) ?>
                                     <small><?= $discType ?></small></span>
                             </li>
                         <?php endif; ?>
@@ -96,7 +96,9 @@
                                 <h6 class="my-0">Shipping</h6>
                                 <small><?= $shipType ?></small>
                             </div>
-                            <span class="text-muted"><?= $shipping ?></span>
+                            <?php if ($shipping != 0) : ?>
+                                <span class="text-muted"><?= format($shipping) ?></span>
+                            <?php endif; ?>
                         </li>
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
                             <div>
@@ -106,11 +108,11 @@
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
                             <span>Total (USD)</span>
-                            <strong><?= $total ?></strong>
+                            <strong><?= format($total) ?></strong>
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
                             <span>Monthly payments</span>
-                            <strong><?= round($monthly, 2) ?></strong>
+                            <strong><?= format($monthly) ?></strong>
                         </li>
                     </ul>
                 <?php endif; ?>
@@ -166,15 +168,15 @@
                                    name="price"
                                    placeholder="Price in US Dollar"
                                    value='<?= $form->prefill('price', '') ?>'>
-                            <div class="input-group-append">
-                                <span class="input-group-text">.00</span>
-                            </div>
+                            <!-- <div class="input-group-append">
+                                 <span class="input-group-text">.00</span>
+                             </div>-->
                         </div>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="qty">Quantity</label>
-                        <input type="number" class="form-control" placeholder="Quantity" id="qty" name="qty"
-                               value='<?= $form->prefill('qty', '') ?>'>
+                        <label for="quantity">Quantity</label>
+                        <input type="number" class="form-control" placeholder="Quantity" id="quantity" name="quantity"
+                               value='<?= $form->prefill('quantity', '') ?>'>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="payments">Payments</label>
@@ -186,9 +188,9 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="disc">Discount <span class="text-muted">(Optional)</span></label>
-                        <input type="number" class="form-control" placeholder="Discount" id="disc" name="disc"
-                               value='<?= $form->prefill('disc', '') ?>'>
+                        <label for="discount">Discount <span class="text-muted">(Optional)</span></label>
+                        <input type="text" class="form-control" placeholder="Discount" id="discount" name="discount"
+                               value='<?= $form->prefill('discount', '') ?>'>
                     </div>
                     <div class="col-md-6 mb-3 custom-control custom-checkbox">
                         <label for="percent">Percentage <span class="text-muted">(%)</span></label>
@@ -214,7 +216,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="shipping">Shipping</label>
                         <select class="custom-select d-block w-100" id="shipping" name="shipping">
-                            <option value='choose'>Choose one...</option>
+                            <option value=''>Choose one...</option>
                             <option value='0' <?php if ($shipping == '0') echo 'selected' ?>>Free / Pickup
                             </option>
                             <option value='9.95' <?php if ($shipping == '9.95') echo 'selected' ?>>Standard: 1 Week $9.95

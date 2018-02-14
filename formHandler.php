@@ -1,51 +1,81 @@
 <?php
 require('includes/Form.php');
 
+
+function format($value){
+    return '$' . number_format($value, 2, '.', ',');
+}
+
 $form = new P2\Form($_POST);
-$shipping = $_POST['shipping'] ?? null;
-$percent = $_POST['percent'] ?? '';
+$post = $_POST ?? '';
+
+
 # Version 2
-// $percent = isset($_POST['percent']) ? $_POST['percent'] : '';
+$tax = isset($_POST['tax']) && $_POST['tax'] != '' ? $_POST['tax'] : 0;
+function dump($mixed = null)
+{
+    echo '<pre>';
+    var_dump($mixed);
+    echo '</pre>';
+}
 
 if ($form->isSubmitted()) {
     $errors = $form->validate(
         [
-
             'name' => 'alpha',
             'email' => 'email',
             'website' => 'url',
-            'price' => 'required|numeric',
-            'qty' => 'required|min:0',
+            'price' => 'required|float',
+            'quantity' => 'required|min:0',
             'payments' => 'required|min:0',
-            'disc' => 'max:100',
+            'discount' => 'max:100',
             'tax' => 'min:-1'
         ]
+
     );
 
+if (!$errors) {
     # Get the Form post values
     $name = $_POST["name"];
     $email = $_POST["email"];
     $website = $_POST["website"];
-    $price = (int)$_POST["price"];
-    $qty = (int)$_POST["qty"];
-    $disc = (int)$_POST["disc"];
-    $tax = (int)$_POST["tax"];
+    $price = $_POST["price"];
+    $quantity = (int)$_POST["quantity"];
+
+    //Set default values for optional parameters that are used in calculations.
+    $discount = $_POST['discount'] == '' ? 0 : $_POST['discount'];
+    $tax = $_POST['tax'] == '' ? 0 : $_POST['tax'];
+    $percent = $_POST['percent'] ?? '';
+    $shipping = $_POST["shipping"];
+    $shippingCost = $shipping == '' ? 0 : $shipping;
+
     $payments = (int)$_POST["payments"];
     $taxRate = ($tax / 100) + 1;
-    $shipping = $_POST["shipping"];
 
-    $total = $price * $qty;
+
+    $total = $price * $quantity;
+
+    // Factor discount amount based on selected type (Percent or Dollar value)
     $discType = "";
-
     if ($percent) {
         $discType = "%";
-        $total = $total * (1 - $disc / 100);
+        $total = $total * (1 - $discount / 100);
     } else {
         $discType = " dollars off";
-        $total = $total - $disc;
+        $total = $total - $discount;
     }
 
-    $total = $total + (int)$shipping;
+    // Include shipping cost
+    $total = $total + $shippingCost;
+
+    // Factor in the tax rate:
+    $total = $total * $taxRate;
+
+    $payments = ($payments == 0) ? 1 : $payments;
+
+    // Calculate the monthly payments:
+    $monthly = $total / $payments;
+
 
     $shipType = "";
     if ($shipping == "0")
@@ -58,11 +88,8 @@ if ($form->isSubmitted()) {
         $shipType = "Not selected";
         $shipping = "";
     }
-// Factor in the tax rate:
-    $total = $total * $taxRate;
 
-    $payments = ($payments == 0) ? 1 : $payments;
+}
 
-// Calculate the monthly payments:
-    $monthly = $total / $payments;
+
 }

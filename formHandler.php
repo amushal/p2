@@ -31,7 +31,7 @@ if ($form->isSubmitted()) {
             'quantity' => 'required|min:0|max:1000',
             'payments' => 'required|min:0|max:1000',
             'discount' => 'min:0|max:100',
-            'tax' => 'min:0'
+            'tax' => 'min:0|max:100'
         ]
     );
 
@@ -45,7 +45,7 @@ if ($form->isSubmitted()) {
 
         //Set default values for optional parameters that are used in calculations.
         $discount = $_POST['discount'] == '' ? 0 : $_POST['discount'];
-        $tax = $_POST['tax'] == '' ? 0 : $_POST['tax'];
+        $tax = $_POST['tax']; //== '' ? 0 : $_POST['tax'];
         $percent = $_POST['percent'] ?? '';
         $shipping = $_POST["shipping"];
         $shippingCost = $shipping == '' ? 0 : $shipping;
@@ -67,11 +67,15 @@ if ($form->isSubmitted()) {
         }
 
         // Determine the tax rate:
-        $taxRate = $tax / 100;
-        $taxRate = $taxRate + 1;
+        $taxRate = 0;
+        if ($tax == "") {
+            $tax = "no Tax";
+        } else {
+            $taxRate = ($tax / 100) + 1;
+            // Factor in the tax rate:
+            $total = $total * $taxRate;
+        }
 
-        // Factor in the tax rate:
-        $total = $total * $taxRate;
         if ($total < 0) {
             $errors = ['error' => '"Total" result cannot be less than 0'];
         }

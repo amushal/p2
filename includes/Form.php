@@ -4,13 +4,13 @@ namespace P2;
 
 class Form
 {
+    const DISCOUNT_FIELD = "discount";
+    const TAX_FIELD = "tax";
+    public $hasErrors = false;
     /**
      * Properties
      */
     private $request;
-    public $hasErrors = false;
-    const DISCOUNT_FIELD = "discount";
-    const TAX_FIELD = "tax";
 
     /**
      *
@@ -19,19 +19,6 @@ class Form
     {
         # Store form data (POST or GET) in a class property called $request
         $this->request = $postOrGet;
-    }
-
-    /**
-     * Get a value from the request, with the option of including a default
-     * if the value is not set.
-     * Example usage:
-     *   $email = $this->get('email', 'example@gmail.com');
-     */
-    public function get($name, $default = null)
-    {
-        $value = isset($this->request[$name]) ? $this->request[$name] : $default;
-
-        return $value;
     }
 
     /**
@@ -66,14 +53,6 @@ class Form
     }
 
     /**
-     * Returns True if *either* GET or POST have been submitted
-     */
-    public function isSubmitted()
-    {
-        return $_SERVER['REQUEST_METHOD'] == 'POST' || !empty($_GET);
-    }
-
-    /**
      * Strips HTML characters; works with arrays or scalar values
      */
     public function sanitize($mixed = null)
@@ -99,6 +78,14 @@ class Form
     private function convertHtmlEntities($mixed)
     {
         return htmlentities($mixed, ENT_QUOTES, "UTF-8");
+    }
+
+    /**
+     * Returns True if *either* GET or POST have been submitted
+     */
+    public function isSubmitted()
+    {
+        return $_SERVER['REQUEST_METHOD'] == 'POST' || !empty($_GET);
     }
 
     /**
@@ -137,6 +124,19 @@ class Form
         $this->hasErrors = !empty($errors);
 
         return $errors;
+    }
+
+    /**
+     * Get a value from the request, with the option of including a default
+     * if the value is not set.
+     * Example usage:
+     *   $email = $this->get('email', 'example@gmail.com');
+     */
+    public function get($name, $default = null)
+    {
+        $value = isset($this->request[$name]) ? $this->request[$name] : $default;
+
+        return $value;
     }
 
     /**
@@ -229,16 +229,6 @@ class Form
     }
 
     /**
-     * Returns true if given parameter is optional
-     */
-    private function isOptional($fieldname)
-    {
-        if ($fieldname == self::DISCOUNT_FIELD || $fieldname == self::TAX_FIELD) {
-            return true;
-        }
-    }
-
-    /**
      * Returns value if the given value is GREATER THAN (non-inclusive) the given parameter
      */
     protected function min($value, $parameter, $fieldname)
@@ -248,6 +238,16 @@ class Form
             return true;
 
         return floatval($value) > floatval($parameter);
+    }
+
+    /**
+     * Returns true if given parameter is optional
+     */
+    private function isOptional($fieldname)
+    {
+        if ($fieldname == self::DISCOUNT_FIELD || $fieldname == self::TAX_FIELD) {
+            return true;
+        }
     }
 
     /**

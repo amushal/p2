@@ -127,7 +127,6 @@ class Form
                 $test = $this->$rule($value, $parameter, $fieldName);
                 # Test failed
                 if (!$test) {
-                    echo $fieldName;
                     $errors[] = '"' . ucfirst($fieldName) . '"' . $this->getErrorMessage($rule, $parameter);
                     # Only indicate one error per field
                     break;

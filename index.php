@@ -91,8 +91,10 @@
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
                             <div>
                                 <h6 class="my-0">Tax</h6>
+                                <small><?= $tax ?>%</small>
+
                             </div>
-                            <span class="text-muted"><?= $tax ?></span>
+                            <span class="text-muted"><?= format($taxRate) ?></span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
                             <div>

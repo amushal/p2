@@ -31,8 +31,7 @@ if ($form->isSubmitted()) {
             'quantity' => 'required|min:0|max:1000',
             'payments' => 'required|min:0|max:1000',
             'discount' => 'min:0|max:100',
-            'tax' => 'min:0',
-            //'total' => 'min:0'
+            'tax' => 'min:0'
         ]
     );
 

@@ -1,5 +1,7 @@
 <?php
 namespace P2;
+//define("DISCOUNT_FIELD", "discount");
+
 class Form
 {
     /**
@@ -7,6 +9,8 @@ class Form
      */
     private $request;
     public $hasErrors = false;
+    const DISCOUNT_FIELD = "discount";
+    const TAX_FIELD = "tax";
 
     /**
      *
@@ -119,9 +123,11 @@ class Form
                     list($rule, $parameter) = explode(':', $rule);
                 }
                 # Run the validation test with the given rule
-                $test = $this->$rule($value, $parameter);
+                # Added field name to exclude optional parameters
+                $test = $this->$rule($value, $parameter, $fieldName);
                 # Test failed
                 if (!$test) {
+                    echo $fieldName;
                     $errors[] = '"' . ucfirst($fieldName) . '"' . $this->getErrorMessage($rule, $parameter);
                     # Only indicate one error per field
                     break;
@@ -210,10 +216,9 @@ class Form
     protected function url($value)
     {
         # Version 1
-//        if (preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $value)) {
-//            return true;
-//        } else {
-//            return false;
+//        $valid = true;
+//        if ($value != '') {
+//            $valid = preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $value);
 //        }
 
         # Version 2
@@ -225,18 +230,35 @@ class Form
     }
 
     /**
+     * Returns true if given parameter is optional
+     */
+    private function isOptional($fieldname)
+    {
+        if ($fieldname == self::DISCOUNT_FIELD || $fieldname == self::TAX_FIELD) {
+            return true;
+        }
+    }
+
+    /**
      * Returns value if the given value is GREATER THAN (non-inclusive) the given parameter
      */
-    protected function min($value, $parameter)
+    protected function min($value, $parameter, $fieldname)
     {
+        //exclude optional fields if empty
+        if ($this->isOptional($fieldname) && $value == '')
+            return true;
+
         return floatval($value) > floatval($parameter);
     }
 
     /**
      * Returns value if the given value is LESS THAN (non-inclusive) the given parameter
      */
-    protected function max($value, $parameter)
+    protected function max($value, $parameter, $fieldname)
     {
+        if ($this->isOptional($fieldname) && $value == '')
+            return true;
+
         return floatval($value) < floatval($parameter);
     }
 

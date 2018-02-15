@@ -6,11 +6,7 @@ function format($value)
     return '$' . number_format($value, 2, '.', ',');
 }
 
-$form = new P2\Form($_POST);
-$post = $_POST ?? '';
-
-# Version 2
-$tax = isset($_POST['tax']) && $_POST['tax'] != '' ? $_POST['tax'] : 0;
+#testing
 function dump($mixed = null)
 {
     echo '<pre>';
@@ -18,19 +14,26 @@ function dump($mixed = null)
     echo '</pre>';
 }
 
+$form = new P2\Form($_POST);
+$post = $_POST ?? '';
+$total = 0;
+
+# Version 2
+$tax = isset($_POST['tax']) && $_POST['tax'] != '' ? $_POST['tax'] : 0;
+
 if ($form->isSubmitted()) {
     $errors = $form->validate(
         [
             'name' => 'alpha',
             'email' => 'email',
             'website' => 'url',
-            'price' => 'required|float',
-            'quantity' => 'required|min:0',
-            'payments' => 'required|min:0',
-            'discount' => 'max:100',
-            'tax' => 'min:-1'
+            'price' => 'required|float|min:0|max:1000000',
+            'quantity' => 'required|min:0|max:1000',
+            'payments' => 'required|min:0|max:1000',
+            'discount' => 'min:0|max:100',
+            'tax' => 'min:0',
+            //'total' => 'min:0'
         ]
-
     );
 
     if (!$errors) {
@@ -49,9 +52,10 @@ if ($form->isSubmitted()) {
         $shippingCost = $shipping == '' ? 0 : $shipping;
 
         $payments = (int)$_POST["payments"];
-        $taxRate = ($tax / 100) + 1;
 
+        // Calculate the total:
         $total = $price * $quantity;
+        $total = $total + $shippingCost;
 
         // Factor discount amount based on selected type (Percent or Dollar value)
         $discType = "";
@@ -63,11 +67,15 @@ if ($form->isSubmitted()) {
             $total = $total - $discount;
         }
 
-        // Include shipping cost
-        $total = $total + $shippingCost;
+        // Determine the tax rate:
+        $taxRate = $tax / 100;
+        $taxRate = $taxRate + 1;
 
         // Factor in the tax rate:
         $total = $total * $taxRate;
+        if ($total < 0) {
+            $errors = ['error' => '"Total" result cannot be less than 0'];
+        }
 
         $payments = ($payments == 0) ? 1 : $payments;
 

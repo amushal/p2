@@ -1,5 +1,7 @@
 <?php
 require('includes/Form.php');
+require('includes/MyForm.php');
+
 
 function format($value)
 {
@@ -14,17 +16,21 @@ function dump($mixed = null)
     echo '</pre>';
 }
 
-$form = new P2\Form($_POST);
-$post = $_POST ?? '';
-$total = 0;
+$form = new Mushal\MyForm($_POST);
+//$post = $_POST ?? '';
+
 
 # Version 2
-$tax = isset($_POST['tax']) && $_POST['tax'] != '' ? $_POST['tax'] : 0;
+//$tax = isset($_POST['tax']) && $_POST['tax'] != '' ? $_POST['tax'] : 0;
+
+
 
 if ($form->isSubmitted()) {
+
     $errors = $form->validate(
         [
             'name' => 'alpha',
+            'product' => 'alphaNumeric|max:25',
             'email' => 'email',
             'website' => 'url',
             'price' => 'required|float|min:0|max:1000000',
@@ -35,22 +41,32 @@ if ($form->isSubmitted()) {
         ]
     );
 
-    if (!$errors) {
-        # Get the Form post values
-        $name = $_POST["name"];
-        $email = $_POST["email"];
-        $website = $_POST["website"];
-        $price = $_POST["price"];
-        $quantity = (int)$_POST["quantity"];
+    if (!$form->hasErrors) {
 
-        //Set default values for optional parameters that are used in calculations.
-        $discount = $_POST['discount'] == '' ? 0 : $_POST['discount'];
-        $tax = $_POST['tax']; //== '' ? 0 : $_POST['tax'];
-        $percent = $_POST['percent'] ?? '';
-        $shipping = $_POST["shipping"];
+# Get the Form post values
+        $name = $form->get("name");
+        $email = $form->get("email");
+
+
+        $product = $form->get('product');
+        $price = $form->get("price");
+        $quantity = (int)$form->get("quantity", '');
+        $tax = $form->get('tax', 0);
+//Set default values for optional parameters that are used in calculations.
+$discount = $form->get('discount') == '' ? 0 : $form->get('discount');
+        //$discount = $form->get('discount', 0);
+//        $discount = $form->has('discount') ? $form->get('discount') : 0;
+
+        $tax = $form->get('tax'); //== '' ? 0 : $_POST['tax'];
+        $percent = $form->has('percent');
+        $shipping = $form->get("shipping");
+
+        $payments = $form->get("payments", 0);
+        $taxRate = 0;
+        $shipType = "";
+        $monthly = 0;
+        $total = 0;
         $shippingCost = $shipping == '' ? 0 : $shipping;
-
-        $payments = (int)$_POST["payments"];
 
         // Calculate the total:
         $total = $price * $quantity;
@@ -67,7 +83,6 @@ if ($form->isSubmitted()) {
         }
 
         // Determine the tax rate:
-        $taxRate = 0;
         if ($tax == "") {
             $tax = "no Tax";
         } else {
@@ -85,7 +100,6 @@ if ($form->isSubmitted()) {
         // Calculate the monthly payments:
         $monthly = $total / $payments;
 
-        $shipType = "";
         if ($shipping == "0")
             $shipType = "Free / Pickup";
         else if ($shipping == "9.95")

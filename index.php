@@ -27,8 +27,9 @@
     <div class="row">
         <div class="col-md-4 order-md-2 mb-4">
 
-            <?php if (isset($errors)) : ?>
-                <?php if (count($errors) > 0) : ?>
+            <?php if ($form->isSubmitted()) : ?>
+
+                <?php if ($form->hasErrors) : ?>
 
                     <h4 class="alert alert-danger d-flex justify-content-between align-items-center mb-3">
                         <strong>Invalid input</strong>
@@ -66,9 +67,9 @@
 
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
                             <div>
-                                <h6 class="my-0">Website</h6>
+                                <h6 class="my-0">Product Name</h6>
                             </div>
-                            <span class="text-muted"><?= $website ?></span>
+                            <span class="text-muted"><?= $product ?></span>
                         </li>
 
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
@@ -172,22 +173,22 @@
                                placeholder="you@example.com"
                                value='<?= $form->prefill('email', '') ?>'>
                         <small id="emailHelp"
-                               class="form-text text-muted">We'll never share your email with anyone else.
+                               class="form-text text-muted">if you like us to email you the result.
                         </small>
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="website">Website <span class="text-muted">(Optional)</span></label>
+                    <label for="product">Product Name <span class="text-muted">(Optional)</span></label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">@</span>
                         </div>
                         <input type="text"
                                class="form-control"
-                               id="website"
-                               name="website"
-                               placeholder="Enter URL"
-                               value='<?= $form->prefill('website', '') ?>'>
+                               id="product"
+                               name="product"
+                               placeholder="Enter a product name"
+                               value='<?= $form->prefill('product', '') ?>'>
                     </div>
                 </div>
                 <div class="row">
@@ -236,7 +237,7 @@
                         <div>
                             <input type="checkbox"
                                    id="percent"
-                                   name="percent" <?php if ($form->isChosen('percent')) echo 'checked' ?>>&nbsp;
+                                   name="percent" <?php if ($form->has('percent')) echo 'checked' ?>>&nbsp;
                             <label for="percent"> %</label>
                         </div>
                     </div>

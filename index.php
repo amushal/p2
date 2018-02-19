@@ -55,21 +55,21 @@
                             <div>
                                 <h6 class="my-0">Name</h6>
                             </div>
-                            <span class="text-muted"><?= $name ?></span>
+                            <span class="text-muted"><?= $form->get('name') ?></span>
                         </li>
 
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
                             <div>
                                 <h6 class="my-0">Email</h6>
                             </div>
-                            <span class="text-muted"><?= $email ?></span>
+                            <span class="text-muted"><?= $form->get('email') ?></span>
                         </li>
 
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
                             <div>
                                 <h6 class="my-0">Product Name</h6>
                             </div>
-                            <span class="text-muted"><?= $product ?></span>
+                            <span class="text-muted"><?= $form->get('product') ?></span>
                         </li>
 
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
@@ -100,7 +100,7 @@
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
                             <div>
                                 <h6 class="my-0">Tax</h6>
-                                <small><?= $tax ?></small>
+                                <small><?= format($tax, true) ?></small>
 
                             </div>
                             <span class="text-muted"><?= format($taxRate) ?></span>

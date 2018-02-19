@@ -2,31 +2,13 @@
 require('includes/Form.php');
 require('includes/MyForm.php');
 
-
-function format($value)
-{
-    return '$' . number_format($value, 2, '.', ',');
-}
-
-#testing
-function dump($mixed = null)
-{
-    echo '<pre>';
-    var_dump($mixed);
-    echo '</pre>';
-}
-
 $form = new Mushal\MyForm($_POST);
 //$post = $_POST ?? '';
-
 
 # Version 2
 //$tax = isset($_POST['tax']) && $_POST['tax'] != '' ? $_POST['tax'] : 0;
 
-
-
 if ($form->isSubmitted()) {
-
     $errors = $form->validate(
         [
             'name' => 'alpha',
@@ -43,72 +25,69 @@ if ($form->isSubmitted()) {
 
     if (!$form->hasErrors) {
 
-# Get the Form post values
-        $name = $form->get("name");
-        $email = $form->get("email");
-
-
-        $product = $form->get('product');
-        $price = $form->get("price");
-        $quantity = (int)$form->get("quantity", '');
-        $tax = $form->get('tax', 0);
-//Set default values for optional parameters that are used in calculations.
-$discount = $form->get('discount') == '' ? 0 : $form->get('discount');
-        //$discount = $form->get('discount', 0);
-//        $discount = $form->has('discount') ? $form->get('discount') : 0;
-
-        $tax = $form->get('tax'); //== '' ? 0 : $_POST['tax'];
-        $percent = $form->has('percent');
-        $shipping = $form->get("shipping");
-
-        $payments = $form->get("payments", 0);
+        # Init
         $taxRate = 0;
-        $shipType = "";
+        $shipType = '';
         $monthly = 0;
         $total = 0;
-        $shippingCost = $shipping == '' ? 0 : $shipping;
+
+        # Get the Form data need for calculation
+        $price = $form->get('price');
+        $quantity = $form->get('quantity');
+        $tax = $form->get('tax');
+        $discount = (float)$form->get('discount');
+        $percent = $form->has('percent');
+        $payments = $form->get('payments');
+        $shipping = $form->get('shipping');
 
         // Calculate the total:
         $total = $price * $quantity;
-        $total = $total + $shippingCost;
+        $total = $total + (float)$shipping;
 
         // Factor discount amount based on selected type (Percent or Dollar value)
-        $discType = "";
+        $discType = '';
         if ($percent) {
-            $discType = "%";
+            $discType = '%';
             $total = $total * (1 - $discount / 100);
         } else {
-            $discType = " dollars off";
+            $discType = ' dollars off';
             $total = $total - $discount;
         }
 
-        // Determine the tax rate:
-        if ($tax == "") {
-            $tax = "no Tax";
+        // Determine the tax:
+        if ($tax == '') {
+            $tax = 'no Tax';
         } else {
             $taxRate = ($tax / 100) + 1;
-            // Factor in the tax rate:
             $total = $total * $taxRate;
         }
 
+        // Will not allow negative results at runtime
         if ($total < 0) {
             $errors = ['error' => '"Total" result cannot be less than 0'];
         }
 
-        $payments = ($payments == 0) ? 1 : $payments;
-
         // Calculate the monthly payments:
         $monthly = $total / $payments;
 
-        if ($shipping == "0")
-            $shipType = "Free / Pickup";
-        else if ($shipping == "9.95")
-            $shipType = "Standard: 1 Week $9.95";
-        else if ($shipping == "29.95")
-            $shipType = "Expedite: 2nd day $29.95";
+        if ($shipping == '0')
+            $shipType = 'Free / Pickup';
+        else if ($shipping == '9.95')
+            $shipType = 'Standard: 1 Week $9.95';
+        else if ($shipping == '29.95')
+            $shipType = 'Expedite: 2nd day $29.95';
         else {
-            $shipType = "Not selected";
-            $shipping = "";
+            $shipType = 'Not selected';
+            $shipping = '';
         }
+    }
+
+    function format($value, $percent = null)
+    {
+        $result = number_format($value, 2, '.', ',');
+        if (is_null($percent))
+            return '$' . $result;
+        else
+            return $result . '%';
     }
 }

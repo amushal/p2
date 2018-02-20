@@ -59,17 +59,17 @@ if ($form->isSubmitted()) {
 
         // Will not allow negative results at runtime
         if ($total < 0) {
-            array_push($errors, '"Total" result cannot be less than 0');
+            array_push($errors, '"Total" result cannot be less than 0.');
         }
 
         // Check if send via email is requested without an email address
         if ($emailMe && $email == '') {
-            array_push($errors, '"Email" was not provided');
+            array_push($errors, '"Email" was not provided. Please uncheck "Send me the results" or input email.');
         }
 
         // Check if send via email is requested without an email address
         if ($discount > 0 && !$discountType) {
-            array_push($errors, '"Discount type" was not specified');
+            array_push($errors, '"Discount type" was not specified.');
         }
 
         //raise exception
@@ -93,6 +93,6 @@ if ($form->isSubmitted()) {
 
     function format($value)
     {
-        return number_format($value, 2, '.', ',');
+        return '$' . number_format($value, 2, '.', ',');
     }
 }

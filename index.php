@@ -138,7 +138,7 @@
                         <?php if ($emailMe) : ?>
                             <li class="list-group-item d-flex justify-content-between bg-light">
                                 <div class="text-success">
-                                    <h6 class="my-0">Sent by email</h6>
+                                    <h6 class="my-0">Will send the results</h6>
                                 </div>
 
                             </li>

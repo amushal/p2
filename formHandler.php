@@ -3,10 +3,6 @@ require('includes/Form.php');
 require('includes/MyForm.php');
 
 $form = new Mushal\MyForm($_POST);
-//$post = $_POST ?? '';
-
-# Version 2
-//$tax = isset($_POST['tax']) && $_POST['tax'] != '' ? $_POST['tax'] : 0;
 
 if ($form->isSubmitted()) {
     $errors = $form->validate(
@@ -24,7 +20,6 @@ if ($form->isSubmitted()) {
     );
 
     if (!$form->hasErrors) {
-
         # Init
         $taxRate = 0;
         $shipType = '';
@@ -32,25 +27,24 @@ if ($form->isSubmitted()) {
         $total = 0;
 
         # Get the Form data need for calculation
+        $email = $form->get('email');
         $price = $form->get('price');
         $quantity = $form->get('quantity');
         $tax = $form->get('tax');
         $discount = (float)$form->get('discount');
-        $percent = $form->has('percent');
+        $discountType = $form->get('discountType');
         $payments = $form->get('payments');
         $shipping = $form->get('shipping');
+        $emailMe = $form->has('emailMe');
 
         // Calculate the total:
         $total = $price * $quantity;
         $total = $total + (float)$shipping;
 
-        // Factor discount amount based on selected type (Percent or Dollar value)
-        $discType = '';
-        if ($percent) {
-            $discType = '%';
+        // Factor discount amount based on selected type (discountType or Dollar value)
+        if ($discountType == '%') {
             $total = $total * (1 - $discount / 100);
         } else {
-            $discType = ' dollars off';
             $total = $total - $discount;
         }
 
@@ -60,12 +54,27 @@ if ($form->isSubmitted()) {
         } else {
             $taxRate = ($tax / 100) + 1;
             $total = $total * $taxRate;
+            $tax = $tax . '%';
         }
 
         // Will not allow negative results at runtime
         if ($total < 0) {
-            $errors = ['error' => '"Total" result cannot be less than 0'];
+            array_push($errors, '"Total" result cannot be less than 0');
         }
+
+        // Check if send via email is requested without an email address
+        if ($emailMe && $email == '') {
+            array_push($errors, '"Email" was not provided');
+        }
+
+        // Check if send via email is requested without an email address
+        if ($discount > 0 && !$discountType) {
+            array_push($errors, '"Discount type" was not specified');
+        }
+
+        //raise exception
+        if (count($errors) > 0)
+            $form->hasErrors = true;
 
         // Calculate the monthly payments:
         $monthly = $total / $payments;
@@ -82,12 +91,8 @@ if ($form->isSubmitted()) {
         }
     }
 
-    function format($value, $percent = null)
+    function format($value)
     {
-        $result = number_format($value, 2, '.', ',');
-        if (is_null($percent))
-            return '$' . $result;
-        else
-            return $result . '%';
+        return number_format($value, 2, '.', ',');
     }
 }

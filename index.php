@@ -92,7 +92,7 @@
                                     <h6 class="my-0">Discount</h6>
                                 </div>
                                 <span class="text-success"><?= round($discount, 2) ?>
-                                    <small><?= $discType ?></small>
+                                    <small><?= $discountType ?></small>
                                 </span>
                             </li>
                         <?php endif; ?>
@@ -100,7 +100,7 @@
                         <li class="list-group-item d-flex justify-content-between lh-condensed">
                             <div>
                                 <h6 class="my-0">Tax</h6>
-                                <small><?= format($tax, true) ?></small>
+                                <small><?= $tax ?></small>
 
                             </div>
                             <span class="text-muted"><?= format($taxRate) ?></span>
@@ -135,6 +135,15 @@
                             <strong><?= format($monthly) ?></strong>
                         </li>
 
+                        <?php if ($emailMe) : ?>
+                            <li class="list-group-item d-flex justify-content-between bg-light">
+                                <div class="text-success">
+                                    <h6 class="my-0">Sent by email</h6>
+                                </div>
+
+                            </li>
+                        <?php endif; ?>
+
                     </ul>
 
                 <?php endif; ?>
@@ -156,12 +165,18 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="name">Name</label>
-                        <input type="text"
-                               class="form-control"
-                               placeholder="Name"
-                               id="name"
-                               name="name"
-                               value='<?= $form->prefill('name', '') ?>'>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">@</span>
+                            </div>
+                            <input type="text"
+                                   class="form-control"
+                                   placeholder="Enter your name"
+                                   id="name"
+                                   name="name"
+                                   value='<?= $form->prefill('name', '') ?>'>
+                        </div>
+
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="email">Email <span class="text-muted">(Optional)</span></label>
@@ -179,22 +194,21 @@
                 </div>
                 <div class="mb-3">
                     <label for="product">Product Name <span class="text-muted">(Optional)</span></label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">@</span>
-                        </div>
-                        <input type="text"
-                               class="form-control"
-                               id="product"
-                               name="product"
-                               placeholder="Enter a product name"
-                               value='<?= $form->prefill('product', '') ?>'>
-                    </div>
+
+                    <input type="text"
+                           class="form-control"
+                           id="product"
+                           name="product"
+                           placeholder="Enter a product name"
+                           value='<?= $form->prefill('product', '') ?>'>
                 </div>
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <label for="price">Price </label>
                         <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
                             <input type="text"
                                    class="form-control"
                                    id="price"
@@ -233,13 +247,15 @@
                                value='<?= $form->prefill('discount', '') ?>'>
                     </div>
                     <div class="col-md-6 mb-3 custom-control custom-checkbox">
-                        <label for="percent">Discount Type </label>
-                        <div>
-                            <input type="checkbox"
-                                   id="percent"
-                                   name="percent" <?php if ($form->has('percent')) echo 'checked' ?>>&nbsp;
-                            <label for="percent"> %</label>
-                        </div>
+                        <fieldset class='radios'>
+                            <label for="discountType">Discount Type </label><br/>
+                            <label><input type='radio'
+                                          name='discountType'
+                                          value='%' <?php if ($form->get('discountType') == '%') echo 'checked' ?>>&nbsp;Percent</label>&nbsp;&nbsp;&nbsp;
+                            <label><input type='radio'
+                                          name='discountType'
+                                          value='USD OFF' <?php if ($form->get('discountType') == 'USD OFF') echo 'checked' ?>>&nbsp;USD OFF</label>
+                        </fieldset>
                     </div>
                 </div>
                 <div class="row">
@@ -266,7 +282,17 @@
                             <option value='29.95' <?php if ($shipping == '29.95') echo 'selected' ?>>Expedite: 2nd day $29.95</option>
                         </select>
                     </div>
+
                 </div>
+
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox"
+                           class="custom-control-input"
+                           id="emailMe"
+                           name="emailMe" <?php if ($form->has('emailMe')) echo 'checked' ?>>
+                    <label class="custom-control-label" for="emailMe">Send me the results</label>
+                </div>
+
 
                 <hr class="mb-4">
 

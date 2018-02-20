@@ -8,11 +8,11 @@ class MyForm extends DWA\Form
     const DISCOUNT_FIELD = "discount";
     const TAX_FIELD = "tax";
 
-/*
-* Returns boolean if given value contains only letters/numbers/spaces
-* @param $value
-* @return bool
-*/
+    /*
+    * Returns boolean if given value contains only letters/numbers/spaces
+    * @param $value
+    * @return bool
+    */
     protected function alphaNumeric($value)
     {
         $valid = true;
@@ -21,6 +21,7 @@ class MyForm extends DWA\Form
 
         return $valid;
     }
+
     /**
      * Returns boolean if the given value is a valid email address
      */
